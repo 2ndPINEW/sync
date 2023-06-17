@@ -23,7 +23,7 @@ export default [
         extensions,
       }),
       typescript({
-        rootDir: "src/core/browser-tester-client/",
+        rootDir: "src/core/",
         declarationDir: "dist/browser-tester-client",
         tsconfig: "tsconfig.browser.json",
       }),

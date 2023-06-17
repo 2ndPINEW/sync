@@ -1,7 +1,12 @@
 import fastify, { FastifyInstance } from "fastify";
+import fastifyStatic from "@fastify/static";
 import config from "../config";
 import fetch from "node-fetch";
-import { bsScriptTemplate } from "./browse-sync/template";
+import path from "path";
+import {
+  browserSyncScriptTemplate,
+  browserTesterScriptTemplate,
+} from "./templates/index";
 
 export class ProxyServer {
   private _server: FastifyInstance;
@@ -9,6 +14,11 @@ export class ProxyServer {
   constructor() {
     this._server = fastify({
       logger: false,
+    });
+
+    this._server.register(fastifyStatic, {
+      root: path.join(__dirname, "../../dist/browser-tester"),
+      prefix: "/browser-tester-static/",
     });
 
     this._server.setNotFoundHandler(async (req, res) => {
@@ -39,7 +49,10 @@ export class ProxyServer {
       const contentType = response.headers.get("content-type");
       if (contentType?.includes("text/html")) {
         const body = await response.text();
-        const newBody = body.replace("</body>", `${bsScriptTemplate}</body>`);
+        const newBody = body.replace(
+          "</body>",
+          `${browserSyncScriptTemplate}${browserTesterScriptTemplate}</body>`
+        );
         res.send(newBody);
       } else {
         const body = await response.buffer();

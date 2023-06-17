@@ -11,6 +11,7 @@
     "outDir": "dist/browser-tester"
   },
   "include": [
-    "**/browser-tester/**/*"
+    "**/browser-tester/**/*",
+    "**/shared/**/*"
   ]
 }

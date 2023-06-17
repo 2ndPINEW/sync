@@ -3,12 +3,12 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "start": "run-s build:browser-tester serve",
-    "dev": "run-p watch:browser-tester watch",
+    "start": "run-s build:browser-tester-client serve",
+    "dev": "run-p watch:browser-tester-client watch",
     "serve": "ts-node src/index.ts",
     "watch": "nodemon",
-    "build:browser-tester": "rollup --config --bundleConfigAsCjs",
-    "watch:browser-tester": "rollup --config --bundleConfigAsCjs --watch"
+    "build:browser-tester-client": "rollup --config --bundleConfigAsCjs",
+    "watch:browser-tester-client": "rollup --config --bundleConfigAsCjs --watch"
   },
   "keywords": [],
   "author": "Eito Takase <eito01178@gmail.com> (https://obake.land/)",

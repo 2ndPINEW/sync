@@ -7,11 +7,11 @@ const extensions = [".ts", ".js"];
 
 export default [
   {
-    input: "src/core/browser-tester/index.ts",
+    input: "src/core/browser-tester-client/index.ts",
     preserveModules: false,
 
     output: {
-      dir: "dist/browser-tester",
+      dir: "dist/browser-tester-client",
       format: "cjs",
       exports: "named",
       sourcemap: false,
@@ -23,8 +23,8 @@ export default [
         extensions,
       }),
       typescript({
-        rootDir: "src/core/browser-tester/",
-        declarationDir: "dist/browser-tester",
+        rootDir: "src/core/browser-tester-client/",
+        declarationDir: "dist/browser-tester-client",
         tsconfig: "tsconfig.browser.json",
       }),
     ],

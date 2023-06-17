@@ -4,7 +4,7 @@
     "**/*.spec.ts",
     ".git",
     "node_modules",
-    "src/**/browser-tester/**/*"
+    "src/**/browser-tester-client/**/*"
   ],
   "watch": [
     "src"

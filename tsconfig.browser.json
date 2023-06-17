@@ -8,10 +8,10 @@
     "declaration": false,
     "sourceMap": false,
     "skipLibCheck": true,
-    "outDir": "dist/browser-tester"
+    "outDir": "dist/browser-tester-client"
   },
   "include": [
-    "**/browser-tester/**/*",
+    "**/browser-tester-client/**/*",
     "**/shared/**/*"
   ]
 }

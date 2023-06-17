@@ -5,11 +5,12 @@
     "moduleResolution": "nodenext",
     "strict": true,
     "esModuleInterop": true,
-    "sourceMap": true,
+    "declaration": false,
+    "sourceMap": false,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "outDir": "dist/browser-tester"
   },
   "include": [
-    "**/*.ts"
+    "**/browser-tester/**/*"
   ]
 }

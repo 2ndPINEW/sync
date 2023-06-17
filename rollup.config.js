@@ -16,7 +16,6 @@ export default [
       exports: "named",
       sourcemap: false,
     },
-
     plugins: [
       commonjs(),
       nodeResolve(),
@@ -24,10 +23,9 @@ export default [
         extensions,
       }),
       typescript({
-        declaration: true,
-        rootDir: "src",
+        rootDir: "src/core/browser-tester/",
         declarationDir: "dist/browser-tester",
-        tsconfig: "src/core/browser-tester/tsconfig.json",
+        tsconfig: "tsconfig.browser.json",
       }),
     ],
   },

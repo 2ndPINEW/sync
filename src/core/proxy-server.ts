@@ -40,10 +40,6 @@ export class ProxyServer {
           res.header(key, value);
         }
       });
-      res.header(
-        "cache-control",
-        "no-store, no-cache, must-revalidate, proxy-revalidate"
-      );
       res.status(response.status);
 
       const contentType = response.headers.get("content-type");

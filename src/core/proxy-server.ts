@@ -26,8 +26,9 @@ export class ProxyServer {
 
       const response = await fetch(url, {
         headers: {
-          Authorization: `Basic ${config.auth}`,
-          ...(req.headers as any),
+          // TODO: Fix
+          // Authorization: `Basic ${config.auth}`,
+          // ...(req.headers as any),
         },
       });
 
@@ -45,10 +46,9 @@ export class ProxyServer {
       const contentType = response.headers.get("content-type");
       if (contentType?.includes("text/html")) {
         const body = await response.text();
-        const newBody = body.replace(
-          "</body>",
-          `${browserSyncScriptTemplate}${browserTesterScriptTemplate}</body>`
-        );
+        const newBody = body
+          .replace("<body>", `<body>${browserSyncScriptTemplate}`)
+          .replace("<head>", `<head>${browserTesterScriptTemplate}`);
         res.send(newBody);
       } else {
         const body = await response.buffer();

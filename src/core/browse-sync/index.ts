@@ -1,15 +1,15 @@
 import { init, type BrowserSyncInstance } from "browser-sync";
-import config from "../../config";
 import historyApiFallback from "connect-history-api-fallback";
+import ports from "../shared/constants/ports";
 
 export class BrowserSync {
   private _instance: BrowserSyncInstance;
 
   constructor() {
     this._instance = init({
-      port: config.sync.port,
+      port: ports.sync.port,
       ui: {
-        port: config.sync.ui.port,
+        port: ports.sync.ui.port,
       },
       open: true,
       middleware: [historyApiFallback()],

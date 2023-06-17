@@ -1,5 +1,5 @@
-import config from "../../config";
 import paths from "../shared/constants/paths";
+import ports from "../shared/constants/ports";
 
 export const browserTesterScriptTemplate = `
 <script src="${paths.clientScript.root}${paths.clientScript.path}?v=0"></script>
@@ -13,7 +13,7 @@ export const browserSyncScriptTemplate = `
       if ('async') {
         script.async = true;
       }
-      script.src = 'http://HOST:${config.sync.port}/browser-sync/browser-sync-client.js?v=2.29.3'.replace("HOST", location.hostname);
+      script.src = 'http://HOST:${ports.sync.port}/browser-sync/browser-sync-client.js?v=2.29.3'.replace("HOST", location.hostname);
       if (document.body) {
         document.body.appendChild(script);
       } else if (document.head) {

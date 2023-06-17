@@ -11,6 +11,7 @@ import {
 import { Subject } from "rxjs";
 import { WsClientChunk, WsServerChunk } from "./shared/schema/ws";
 import paths from "./shared/constants/paths";
+import ports from "./shared/constants/ports";
 
 export class ProxyServer {
   private _server: FastifyInstance;
@@ -91,7 +92,7 @@ export class ProxyServer {
       }
     });
 
-    this._server.listen({ port: config.proxy.port }).then((address) => {
+    this._server.listen({ port: ports.proxy.port }).then((address) => {
       console.log(`Server listening on ${address}`);
     });
   }

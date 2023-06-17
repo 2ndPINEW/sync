@@ -1,7 +1,8 @@
 import config from "../../config";
+import paths from "../shared/constants/paths";
 
 export const browserTesterScriptTemplate = `
-<script src="/browser-tester-static/index.js?v=0"></script>
+<script src="${paths.clientScript.root}${paths.clientScript.path}?v=0"></script>
 `;
 
 export const browserSyncScriptTemplate = `

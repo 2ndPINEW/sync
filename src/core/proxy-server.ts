@@ -10,6 +10,7 @@ import {
 } from "./templates/index";
 import { Subject } from "rxjs";
 import { WsClientChunk, WsServerChunk } from "./shared/schema/ws";
+import paths from "./shared/constants/paths";
 
 export class ProxyServer {
   private _server: FastifyInstance;
@@ -25,37 +26,34 @@ export class ProxyServer {
     // Client Script を配信する
     this._server.register(fastifyStatic, {
       root: path.join(__dirname, "../../dist/browser-tester-client"),
-      prefix: "/browser-tester-static/",
+      prefix: paths.clientScript.root,
     });
 
     this._server.register(fastifyWebsocket);
     this._server.register(async (fastify) => {
-      fastify.get(
-        "/__browser-tester-ws",
-        { websocket: true },
-        (connection, req) => {
-          connection.socket.on(
-            "message",
-            (data: Buffer | ArrayBuffer | Buffer[], isBinary) => {
-              console.log("message", data, isBinary);
-              if (isBinary) {
-                return;
-              }
-              const stringData =
-                data instanceof Buffer
-                  ? data.toString()
-                  : data instanceof ArrayBuffer
-                  ? Buffer.from(data).toString()
-                  : Buffer.concat(data).toString();
-              const parsedData = JSON.parse(stringData) as WsClientChunk;
-              this._wsClientChunk$.next(parsedData);
+      fastify.get(paths.ws.path, { websocket: true }, (connection, req) => {
+        connection.socket.on(
+          "message",
+          (data: Buffer | ArrayBuffer | Buffer[], isBinary) => {
+            if (isBinary) {
+              return;
             }
-          );
-          this._wsServerChunk$.subscribe((data) => {
-            connection.socket.send(JSON.stringify(data));
-          });
-        }
-      );
+            const stringData =
+              data instanceof Buffer
+                ? data.toString()
+                : data instanceof ArrayBuffer
+                ? Buffer.from(data).toString()
+                : Buffer.concat(data).toString();
+            const parsedData = JSON.parse(stringData) as WsClientChunk;
+            this._wsClientChunk$.next(parsedData);
+            console.log("WS Receive:", parsedData);
+          }
+        );
+        this._wsServerChunk$.subscribe((data) => {
+          connection.socket.send(JSON.stringify(data));
+          console.log("WS Send:", data);
+        });
+      });
     });
 
     this._server.setNotFoundHandler(async (req, res) => {

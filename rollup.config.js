@@ -1,5 +1,7 @@
 import babel from "@rollup/plugin-babel";
 import typescript from "@rollup/plugin-typescript";
+import { nodeResolve } from "@rollup/plugin-node-resolve";
+import commonjs from "@rollup/plugin-commonjs";
 
 const extensions = [".ts", ".js"];
 
@@ -16,6 +18,8 @@ export default [
     },
 
     plugins: [
+      commonjs(),
+      nodeResolve(),
       babel({
         extensions,
       }),

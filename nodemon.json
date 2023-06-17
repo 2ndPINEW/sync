@@ -1,0 +1,14 @@
+{
+  "ignore": [
+    "**/*.test.ts",
+    "**/*.spec.ts",
+    ".git",
+    "node_modules",
+    "src/**/browser-tester/**/*"
+  ],
+  "watch": [
+    "src"
+  ],
+  "exec": "ts-node ./src/index.ts",
+  "ext": "ts, js"
+}

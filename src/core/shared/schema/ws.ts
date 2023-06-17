@@ -9,9 +9,12 @@ type WsClientChunkProps =
       kind: "connect";
     }
   | {
+      kind: "message";
+    }
+  | {
       kind: "disconnect";
     };
 
 type ChunkSharedProps = {
-  id: string;
+  clientId: string;
 };

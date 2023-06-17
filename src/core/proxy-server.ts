@@ -12,6 +12,10 @@ import { Subject } from "rxjs";
 import { WsClientChunk, WsServerChunk } from "./shared/schema/ws";
 import paths from "./shared/constants/paths";
 import ports from "./shared/constants/ports";
+import {
+  serverChunkToString,
+  stringToClientChunk,
+} from "./shared/utils/ws-chunk";
 
 export class ProxyServer {
   private _server: FastifyInstance;
@@ -45,13 +49,13 @@ export class ProxyServer {
                 : data instanceof ArrayBuffer
                 ? Buffer.from(data).toString()
                 : Buffer.concat(data).toString();
-            const parsedData = JSON.parse(stringData) as WsClientChunk;
+            const parsedData = stringToClientChunk(stringData);
             this._wsClientChunk$.next(parsedData);
             console.log("WS Receive:", parsedData);
           }
         );
         this._wsServerChunk$.subscribe((data) => {
-          connection.socket.send(JSON.stringify(data));
+          connection.socket.send(serverChunkToString(data));
           console.log("WS Send:", data);
         });
       });

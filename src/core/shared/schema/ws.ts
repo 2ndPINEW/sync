@@ -14,7 +14,7 @@ type WsServerChunkProps =
 type WsClientChunkProps =
   // ページを開いた時に送る(接続イベントも含める)
   | {
-      type: "open";
+      type: "load";
       path: string;
       platformInfo: PlatformInfo;
     }

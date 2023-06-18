@@ -18,7 +18,7 @@ socket.addEventListener("open", (event) => {
   socket.send(
     clientChunkToString({
       clientId: clientId,
-      type: "open",
+      type: "load",
       path: getCurrentPath(),
       platformInfo: getPlatformInfo(),
     })

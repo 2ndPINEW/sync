@@ -39,7 +39,9 @@ export class WebSocketService {
     this.socket.addEventListener("message", (event) => {
       logInfo("Received message", event.data);
       const chunk = stringToServerChunk(event.data);
-      this._message$.next(chunk);
+      if (chunk.clientId === clientId || chunk.clientId === "*") {
+        this._message$.next(chunk);
+      }
     });
   }
 

@@ -5,6 +5,7 @@ import {
   WsServerChunk,
 } from "../../shared/schema/ws";
 import { ProxyServer } from "./proxy-server";
+import { logInfo } from "../utils/logger";
 
 interface Client {
   id: string;
@@ -59,7 +60,7 @@ export class ClientService {
     this._clients = this._clients.filter(
       (client) => now - client.lastActiveAt < 8000
     );
-    console.log(this._clients);
+    logInfo("Clients", this._clients);
   }
 
   send(chunk: WsServerChunk) {

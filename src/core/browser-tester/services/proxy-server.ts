@@ -16,6 +16,7 @@ import {
   serverChunkToString,
   stringToClientChunk,
 } from "../../shared/utils/ws-chunk";
+import { logInfo } from "../utils/logger";
 
 export class ProxyServer {
   private _server: FastifyInstance;
@@ -50,12 +51,12 @@ export class ProxyServer {
                 ? Buffer.from(data).toString()
                 : Buffer.concat(data).toString();
             const parsedData = stringToClientChunk(stringData);
-            console.log("WS Receive:", parsedData);
+            logInfo("WS Receive:", parsedData);
             this._wsClientChunk$.next(parsedData);
           }
         );
         this._wsServerChunk$.subscribe((data) => {
-          console.log("WS Send:", data);
+          logInfo("WS Send:", data);
           connection.socket.send(serverChunkToString(data));
         });
       });
@@ -97,7 +98,7 @@ export class ProxyServer {
     });
 
     this._server.listen({ port: ports.proxy.port }).then((address) => {
-      console.log(`Server listening on ${address}`);
+      logInfo(`Server listening on ${address}`);
     });
   }
 

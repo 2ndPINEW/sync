@@ -6,40 +6,57 @@ import {
 } from "../../shared/utils/ws-chunk";
 import { logInfo } from "../utils/logger";
 import { clientId, getCurrentPath, getPlatformInfo } from "../utils/client";
+import { WsClientChunk, WsServerChunk } from "../../shared/schema/ws";
+import { Subject } from "rxjs";
 
-const hostname = window.location.hostname;
-const url = `ws://${hostname}:${ports.proxy.port}${paths.ws.path}`;
+export class WebSocketService {
+  private socket!: WebSocket;
 
-logInfo("Connecting to", url);
-const socket = new WebSocket(url);
+  private _message$ = new Subject<WsServerChunk>();
 
-socket.addEventListener("open", (event) => {
-  logInfo("Connected", event);
-  socket.send(
-    clientChunkToString({
-      clientId: clientId,
-      type: "load",
-      path: getCurrentPath(),
-      platformInfo: getPlatformInfo(),
-    })
-  );
-});
-
-// メッセージの待ち受け
-socket.addEventListener("message", (event) => {
-  logInfo("Received message", event.data);
-  const chunk = stringToServerChunk(event.data);
-  if (chunk.type === "request-page-open") {
-    console.log("request-page-open", chunk.path);
-    window.location.href = chunk.path;
+  constructor() {
+    this.connect();
   }
-});
 
-export const send = (message: string) => {
-  socket.send(
-    clientChunkToString({
-      clientId: clientId,
-      type: "message",
-    })
-  );
-};
+  private connect() {
+    const hostname = window.location.hostname;
+    const url = `ws://${hostname}:${ports.proxy.port}${paths.ws.path}`;
+    logInfo("Connecting to", url);
+    this.socket = new WebSocket(url);
+
+    this.socket.addEventListener("open", (event) => {
+      logInfo("Connected", event);
+      this.socket.send(
+        clientChunkToString({
+          clientId: clientId,
+          type: "load",
+          path: getCurrentPath(),
+          platformInfo: getPlatformInfo(),
+        })
+      );
+    });
+
+    this.socket.addEventListener("message", (event) => {
+      logInfo("Received message", event.data);
+      const chunk = stringToServerChunk(event.data);
+      this._message$.next(chunk);
+    });
+  }
+
+  get message$() {
+    return this._message$.asObservable();
+  }
+
+  send(chunk: WsClientChunk) {
+    this.socket.send(clientChunkToString(chunk));
+  }
+
+  // TODO: 画面閉じたりリロードする前に切断するようにする
+  close() {
+    this.send({
+      type: "disconnect",
+      clientId,
+    });
+    this.socket.close();
+  }
+}

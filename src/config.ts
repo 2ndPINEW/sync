@@ -1,6 +1,6 @@
 export default {
   // 最後のスラッシュはいらない
-  target: "http://127.0.0.1:3010",
+  target: "http://localhost:3000",
   // "username:password"
   auth: "",
   log: {

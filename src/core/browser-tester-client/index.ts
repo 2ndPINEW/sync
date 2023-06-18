@@ -21,15 +21,19 @@ try {
   });
   document.addEventListener(
     "DOMContentLoaded",
-    async () => {
-      ws.send({
-        type: "idle",
-        id: Math.random().toString(32).slice(2),
-        clientId,
-        path: window.location.pathname,
-        html: document.documentElement.outerHTML,
-        screenshot: await capture(),
-      });
+    () => {
+      window.setTimeout(async () => {
+        ws.send({
+          type: "idle",
+          id: Math.random().toString(32).slice(2),
+          clientId,
+          path: window.location.pathname,
+          html: document.documentElement.outerHTML,
+          screenshot: await capture(),
+        });
+
+        logInfo("INFO", "Send idle");
+      }, 2000);
     },
     false
   );

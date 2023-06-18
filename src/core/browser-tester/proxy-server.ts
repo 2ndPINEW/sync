@@ -50,13 +50,13 @@ export class ProxyServer {
                 ? Buffer.from(data).toString()
                 : Buffer.concat(data).toString();
             const parsedData = stringToClientChunk(stringData);
-            this._wsClientChunk$.next(parsedData);
             console.log("WS Receive:", parsedData);
+            this._wsClientChunk$.next(parsedData);
           }
         );
         this._wsServerChunk$.subscribe((data) => {
-          connection.socket.send(serverChunkToString(data));
           console.log("WS Send:", data);
+          connection.socket.send(serverChunkToString(data));
         });
       });
     });

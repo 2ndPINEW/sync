@@ -6,6 +6,9 @@ import {
 } from "../../shared/schema/ws";
 import { ProxyServer } from "./proxy-server";
 import { mkdirSync, writeFileSync } from "fs";
+import DomParser from "dom-parser";
+
+const parser = new DomParser();
 
 export interface Client {
   id: string;
@@ -18,6 +21,11 @@ export class ClientService {
   private _server: ProxyServer;
 
   private _clients$: BehaviorSubject<Client[]> = new BehaviorSubject([] as any);
+
+  private paths: {
+    path: string;
+    checked: boolean;
+  }[] = [];
 
   constructor() {
     this._server = new ProxyServer();
@@ -60,6 +68,19 @@ export class ClientService {
       writeFileSync(`.cache/${chunk.clientId}/${chunk.id}.png`, buf);
       chunk.screenshot = "";
 
+      const dom = parser.parseFromString(chunk.html);
+      const aTags = dom.getElementsByTagName("a");
+      const hrefs = aTags.map((aTag) => aTag.getAttribute("href"));
+      hrefs.forEach((href) => {
+        const alreadyExists = this.paths.find((path) => path.path === href);
+        if (href && !alreadyExists) {
+          this.paths.push({
+            path: href,
+            checked: false,
+          });
+        }
+      });
+
       this._clients$.next(
         this._clients$.value.map((client) => {
           if (client.id === chunk.clientId) {
@@ -101,5 +122,29 @@ export class ClientService {
 
   get clients$() {
     return this._clients$;
+  }
+
+  start() {
+    timer(0, 5000).subscribe(() => {
+      this.paths.forEach((path) => {
+        this._clients$.value.forEach((client) => {
+          client.idleLogs.forEach((log) => {
+            if (log.path === path.path) {
+              path.checked = true;
+            }
+          });
+        });
+      });
+      const targetPath = this.paths.find((path) => !path.checked);
+      if (targetPath) {
+        this._server.wsSend({
+          type: "request-page-open",
+          clientId: "*",
+          path: targetPath.path,
+        });
+      } else {
+        console.log("all paths are checked");
+      }
+    });
   }
 }

@@ -31,6 +31,10 @@ export class RestApiServer {
       reply.send(JSON.stringify(clients));
     });
 
+    this._server.get("/start", async (request, reply) => {
+      this.start();
+    });
+
     this._server.listen({ port: ports.managementApi.port }).then((address) => {
       logInfo(`Server listening on ${address}`);
     });
@@ -38,5 +42,14 @@ export class RestApiServer {
 
   updateClients(clients: Client[]) {
     this._clients = clients;
+  }
+
+  handlers: Array<() => void> = [];
+  addOnStartCallback(handler: () => void) {
+    this.handlers.push(handler);
+  }
+
+  start() {
+    this.handlers.forEach((handler) => handler());
   }
 }

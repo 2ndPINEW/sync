@@ -27,9 +27,23 @@ type IdleLog = {
 
 type PathGroupedInfo = {
   path: string;
-  infos: Client[];
+  infos: {
+    clientId: string;
+    logId: string;
+    platformInfo: {
+      os: string;
+      browser: string;
+      version: string;
+      screen: {
+        width: number;
+        height: number;
+      };
+      language: string;
+    };
+  }[];
 };
 
+// あまりにもカスコード
 const getClients = async (): Promise<PathGroupedInfo[]> => {
   const res = await fetch("http://localhost:4637/clients", {
     method: "GET",
@@ -46,10 +60,24 @@ const getClients = async (): Promise<PathGroupedInfo[]> => {
       if (pathGroupedInfoIndex === -1) {
         pathGroupedInfo.push({
           path,
-          infos: [client],
+          infos: [
+            {
+              clientId: client.id,
+              logId: log.id,
+              platformInfo: client.platformInfo,
+            },
+          ],
         });
-      } else {
-        pathGroupedInfo[pathGroupedInfoIndex].infos.push(client);
+      } else if (
+        !pathGroupedInfo[pathGroupedInfoIndex].infos.some(
+          (info) => info.clientId === client.id && info.logId === log.id
+        )
+      ) {
+        pathGroupedInfo[pathGroupedInfoIndex].infos.push({
+          clientId: client.id,
+          logId: log.id,
+          platformInfo: client.platformInfo,
+        });
       }
     });
   });

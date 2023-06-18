@@ -11,5 +11,9 @@ export class BrowserTester {
     this.clientService.clients$.subscribe((clients) => {
       this.restApiServer.updateClients(clients);
     });
+
+    this.restApiServer.addOnStartCallback(() => {
+      this.clientService.start();
+    });
   }
 }

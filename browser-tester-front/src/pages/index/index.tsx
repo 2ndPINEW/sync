@@ -24,10 +24,7 @@ function Home() {
                 <div>{info.platformInfo.os}</div>
                 <div>{info.platformInfo.browser}</div>
                 <div>{info.platformInfo.version}</div>
-                <Preview
-                  clientId={info.id}
-                  logId={info.idleLogs[0].id}
-                ></Preview>
+                <Preview clientId={info.clientId} logId={info.logId}></Preview>
               </div>
             ))}
           </div>

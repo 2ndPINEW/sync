@@ -19,6 +19,11 @@ type WsClientChunkProps =
       platformInfo: PlatformInfo;
     }
   | {
+      type: "idle";
+      path: string;
+      html: string;
+    }
+  | {
       type: "pong";
     }
   // 切断

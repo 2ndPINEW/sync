@@ -126,7 +126,7 @@ export class ClientService {
   }
 
   start() {
-    timer(0, 5000).subscribe(() => {
+    timer(0, 10000).subscribe(() => {
       this.paths.forEach((path) => {
         this._clients$.value.forEach((client) => {
           client.idleLogs.forEach((log) => {

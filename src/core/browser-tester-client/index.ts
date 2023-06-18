@@ -3,7 +3,7 @@ import { onError$ } from "./services/error-handler";
 import { WebSocketService } from "./services/websocket";
 import { clientId } from "./utils/client";
 import { capture } from "./screen-capture";
-import { timer } from "rxjs";
+import { take, timer } from "rxjs";
 
 logInfo("INFO", "Initializing...");
 
@@ -23,16 +23,26 @@ try {
   document.addEventListener(
     "DOMContentLoaded",
     async () => {
-      timer(2000).subscribe(async () => {
-        ws.send({
-          type: "idle",
-          id: Math.random().toString(32).slice(2),
-          clientId,
-          path: window.location.pathname,
-          html: document.documentElement.outerHTML,
-          screenshot: await capture(),
+      timer(3000).subscribe(async () => {
+        timer(0, 10)
+          .pipe(take(100))
+          .subscribe((i) => {
+            window.scrollTo({
+              top: i * 100,
+              left: 0,
+            });
+          });
+        timer(3000).subscribe(async () => {
+          ws.send({
+            type: "idle",
+            id: Math.random().toString(32).slice(2),
+            clientId,
+            path: window.location.pathname,
+            html: document.documentElement.outerHTML,
+            screenshot: await capture(),
+          });
+          logInfo("INFO", "Send loaded");
         });
-        logInfo("INFO", "Send loaded");
       });
     },
     false

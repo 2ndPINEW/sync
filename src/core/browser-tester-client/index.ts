@@ -3,6 +3,7 @@ import { onError$ } from "./services/error-handler";
 import { WebSocketService } from "./services/websocket";
 import { clientId } from "./utils/client";
 import { capture } from "./screen-capture";
+import { timer } from "rxjs";
 
 logInfo("INFO", "Initializing...");
 
@@ -21,8 +22,8 @@ try {
   });
   document.addEventListener(
     "DOMContentLoaded",
-    () => {
-      window.setTimeout(async () => {
+    async () => {
+      timer(2000).subscribe(async () => {
         ws.send({
           type: "idle",
           id: Math.random().toString(32).slice(2),
@@ -31,9 +32,8 @@ try {
           html: document.documentElement.outerHTML,
           screenshot: await capture(),
         });
-
-        logInfo("INFO", "Send idle");
-      }, 2000);
+        logInfo("INFO", "Send loaded");
+      });
     },
     false
   );

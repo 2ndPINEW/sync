@@ -12,6 +12,12 @@ try {
     if (message.type === "request-page-open") {
       window.location.href = message.path;
     }
+    if (message.type === "ping") {
+      ws.send({
+        type: "pong",
+        clientId,
+      });
+    }
   });
   document.addEventListener(
     "DOMContentLoaded",

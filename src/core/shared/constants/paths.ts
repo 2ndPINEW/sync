@@ -1,5 +1,5 @@
 export default {
-  clientScript: {
+  static: {
     root: "/__browser-tester-static/",
     path: "index.js",
   },

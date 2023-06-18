@@ -31,8 +31,11 @@ export class ProxyServer {
 
     // Client Script を配信する
     this._server.register(fastifyStatic, {
-      root: path.join(__dirname, "../../../../dist/browser-tester-client"),
-      prefix: paths.clientScript.root,
+      root: [
+        path.join(__dirname, "../../../../dist/browser-tester-client"),
+        path.join(__dirname, "../../../../.cache"),
+      ],
+      prefix: paths.static.root,
     });
 
     this._server.register(fastifyWebsocket);

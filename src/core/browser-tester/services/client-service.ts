@@ -5,6 +5,7 @@ import {
   WsServerChunk,
 } from "../../shared/schema/ws";
 import { ProxyServer } from "./proxy-server";
+import { mkdirSync, writeFileSync } from "fs";
 
 export interface Client {
   id: string;
@@ -50,6 +51,15 @@ export class ClientService {
       );
     }
     if (chunk.type === "idle") {
+      // /.cache/ に chunk.screenshot を保存する
+      const buf = Buffer.from(
+        chunk.screenshot.replace(/^data:image\/png;base64,/, ""),
+        "base64"
+      );
+      mkdirSync(`.cache/${chunk.clientId}`, { recursive: true });
+      writeFileSync(`.cache/${chunk.clientId}/${chunk.id}.png`, buf);
+      chunk.screenshot = "";
+
       this._clients$.next(
         this._clients$.value.map((client) => {
           if (client.id === chunk.clientId) {

@@ -1,7 +1,40 @@
 import "./index.css";
+import { useFetchClients } from "../../hooks/core/useFetch";
+import Preview from "./_components/preview";
 
 function Home() {
-  return <div>Home</div>;
+  const { data } = useFetchClients();
+  return (
+    <>
+      {data?.map((path) => (
+        <div
+          key={path.path}
+          style={{
+            display: "flex",
+          }}
+        >
+          <div>{path.path}</div>
+          <div
+            style={{
+              display: "flex",
+            }}
+          >
+            {path.infos.map((info) => (
+              <div>
+                <div>{info.platformInfo.os}</div>
+                <div>{info.platformInfo.browser}</div>
+                <div>{info.platformInfo.version}</div>
+                <Preview
+                  clientId={info.id}
+                  logId={info.idleLogs[0].id}
+                ></Preview>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </>
+  );
 }
 
 export default Home;

@@ -1,4 +1,5 @@
 import fastify, { FastifyInstance } from "fastify";
+import cors from "@fastify/cors";
 import ports from "../../shared/constants/ports";
 import { logInfo } from "../utils/logger";
 import { Client } from "./client-service";
@@ -11,6 +12,8 @@ export class RestApiServer {
 
   constructor() {
     this._server = fastify();
+
+    this._server.register(cors, {});
 
     this._server.get("/clients", async (request, reply) => {
       const clients = this._clients.map((client) => {

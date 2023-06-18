@@ -2,7 +2,7 @@ import paths from "../shared/constants/paths";
 import ports from "../shared/constants/ports";
 
 export const browserTesterScriptTemplate = `
-<script src="${paths.clientScript.root}${paths.clientScript.path}?v=0"></script>
+<script src="${paths.static.root}${paths.static.path}?v=0"></script>
 `;
 
 export const browserSyncScriptTemplate = `

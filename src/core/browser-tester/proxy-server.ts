@@ -8,7 +8,7 @@ import {
   browserSyncScriptTemplate,
   browserTesterScriptTemplate,
 } from "../templates/index";
-import { Subject } from "rxjs";
+import { Observable, Subject } from "rxjs";
 import { WsClientChunk, WsServerChunk } from "../shared/schema/ws";
 import paths from "../shared/constants/paths";
 import ports from "../shared/constants/ports";
@@ -105,8 +105,8 @@ export class ProxyServer {
     return this._server;
   }
 
-  get wsClientChunk$(): Subject<WsClientChunk> {
-    return this._wsClientChunk$;
+  get wsClientChunk$(): Observable<WsClientChunk> {
+    return this._wsClientChunk$.asObservable();
   }
 
   wsSend(data: WsServerChunk) {

@@ -31,46 +31,6 @@ export class RestApiServer {
       reply.send(JSON.stringify(clients));
     });
 
-    this._server.get("/clients/:clientId", async (request, reply) => {
-      const client = this._clients.find(
-        (client) => client.id === (request.params as any).clientId
-      );
-      if (!client) {
-        reply.status(404);
-        return;
-      }
-      reply.send(
-        JSON.stringify({
-          ...client,
-          idleLogs: client.idleLogs.map((log) => {
-            return {
-              ...log,
-              screenshot: null,
-              html: null,
-            };
-          }),
-        })
-      );
-    });
-
-    this._server.get("/clients/:clientId/:logId", async (request, reply) => {
-      const client = this._clients.find(
-        (client) => client.id === (request.params as any).clientId
-      );
-      if (!client) {
-        reply.status(404);
-        return;
-      }
-      const log = client.idleLogs.find(
-        (log) => log.id === (request.params as any).logId
-      );
-      if (!log) {
-        reply.status(404);
-        return;
-      }
-      reply.send(JSON.stringify(log));
-    });
-
     this._server.listen({ port: ports.managementApi.port }).then((address) => {
       logInfo(`Server listening on ${address}`);
     });

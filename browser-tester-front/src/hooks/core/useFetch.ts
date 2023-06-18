@@ -85,6 +85,14 @@ const getClients = async (): Promise<PathGroupedInfo[]> => {
   return pathGroupedInfo;
 };
 
+export const fetchStart = async () => {
+  const res = await fetch("http://localhost:4637/start", {
+    method: "GET",
+  });
+  const json = await res.json();
+  return json;
+};
+
 export const useFetchClients = () => {
   return useQuery({
     queryKey: ["clients"],

@@ -1,11 +1,25 @@
 import "./index.css";
-import { useFetchClients } from "../../hooks/core/useFetch";
+import { fetchStart, useFetchClients } from "../../hooks/core/useFetch";
 import Preview from "./_components/preview";
 
 function Home() {
   const { data } = useFetchClients();
+
+  const handleStart = () => {
+    fetchStart();
+  };
+
   return (
     <>
+      <button
+        style={{
+          borderRadius: "8px",
+          padding: "8px 16px",
+        }}
+        onClick={handleStart}
+      >
+        Start
+      </button>
       {data?.map((path) => (
         <div
           key={path.path}

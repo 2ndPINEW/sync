@@ -4,15 +4,17 @@ import {
   clientChunkToString,
   stringToServerChunk,
 } from "../../shared/utils/ws-chunk";
-import { logInfo } from "../utils/logger";
+import { logInfo, logWarn } from "../utils/logger";
 import { clientId, getCurrentPath, getPlatformInfo } from "../utils/client";
 import { WsClientChunk, WsServerChunk } from "../../shared/schema/ws";
-import { Subject } from "rxjs";
+import { Subject, timer } from "rxjs";
 
 export class WebSocketService {
   private socket!: WebSocket;
 
   private _message$ = new Subject<WsServerChunk>();
+
+  private _isConnected = false;
 
   constructor() {
     this.connect();
@@ -34,6 +36,7 @@ export class WebSocketService {
           platformInfo: getPlatformInfo(),
         })
       );
+      this._isConnected = true;
     });
 
     this.socket.addEventListener("message", (event) => {
@@ -49,7 +52,17 @@ export class WebSocketService {
     return this._message$.asObservable();
   }
 
-  send(chunk: WsClientChunk) {
+  send(chunk: WsClientChunk, retry = 0) {
+    if (retry > 10) {
+      logWarn("Retry over 10 times. Stop retrying.", chunk);
+      return;
+    }
+    if (!this._isConnected) {
+      timer(1000).subscribe(() => {
+        this.send(chunk, retry + 1);
+      });
+      return;
+    }
     this.socket.send(clientChunkToString(chunk));
   }
 

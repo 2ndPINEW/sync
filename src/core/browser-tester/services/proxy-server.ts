@@ -91,7 +91,7 @@ export class ProxyServer {
       if (contentType?.includes("text/html")) {
         const body = await response.text();
         const newBody = body
-          .replace("<body>", `<body>${browserSyncScriptTemplate}`)
+          // .replace("<body>", `<body>${browserSyncScriptTemplate}`)
           .replace("<head>", `<head>${browserTesterScriptTemplate}`);
         res.send(newBody);
       } else {

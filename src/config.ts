@@ -4,7 +4,7 @@ export default {
   // "username:password"
   auth: "",
   log: {
-    debug: true,
+    debug: false,
     info: true,
     warn: true,
     error: true,

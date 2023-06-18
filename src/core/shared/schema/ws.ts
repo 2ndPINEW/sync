@@ -22,6 +22,7 @@ type WsClientChunkProps =
       type: "idle";
       path: string;
       html: string;
+      /** Base64 image */
       screenshot: string;
     }
   | {

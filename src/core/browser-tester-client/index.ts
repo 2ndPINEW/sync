@@ -2,6 +2,7 @@ import { logInfo } from "./utils/logger";
 import { onError$ } from "./services/error-handler";
 import { WebSocketService } from "./services/websocket";
 import { clientId } from "./utils/client";
+import { capture } from "./screen-capture";
 
 logInfo("INFO", "Initializing...");
 
@@ -14,12 +15,13 @@ try {
   });
   document.addEventListener(
     "DOMContentLoaded",
-    () => {
+    async () => {
       ws.send({
         type: "idle",
         clientId,
         path: window.location.pathname,
         html: document.documentElement.outerHTML,
+        screenshot: await capture(),
       });
     },
     false

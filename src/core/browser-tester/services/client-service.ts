@@ -7,6 +7,7 @@ import {
 import { ProxyServer } from "./proxy-server";
 import { mkdirSync, writeFileSync } from "fs";
 import DomParser from "dom-parser";
+import { logInfo } from "../utils/logger";
 
 const parser = new DomParser();
 
@@ -73,7 +74,7 @@ export class ClientService {
       const hrefs = aTags.map((aTag) => aTag.getAttribute("href"));
       hrefs.forEach((href) => {
         const alreadyExists = this.paths.find((path) => path.path === href);
-        if (href && !alreadyExists) {
+        if (href && !alreadyExists && href.startsWith("/")) {
           this.paths.push({
             path: href,
             checked: false,
@@ -137,6 +138,7 @@ export class ClientService {
       });
       const targetPath = this.paths.find((path) => !path.checked);
       if (targetPath) {
+        logInfo(`request-page-open: ${targetPath.path}`);
         this._server.wsSend({
           type: "request-page-open",
           clientId: "*",

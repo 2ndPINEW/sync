@@ -11,12 +11,15 @@ function Home() {
           key={path.path}
           style={{
             display: "flex",
+            gap: "32px",
           }}
         >
-          <div>{path.path}</div>
+          <h2>{path.path}</h2>
           <div
             style={{
-              display: "flex",
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
+              gap: "8px",
             }}
           >
             {path.infos.map((info) => (

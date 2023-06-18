@@ -3,7 +3,7 @@ function Preview({ clientId, logId }: { clientId: string; logId: string }) {
     <>
       <img
         src={`http://localhost:4636/__browser-tester-static/${clientId}/${logId}.png`}
-        style={{ width: "100%", minWidth: "500px" }}
+        style={{ width: "100%" }}
         loading="lazy"
       ></img>
     </>

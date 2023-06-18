@@ -49,7 +49,12 @@ export class RestApiServer {
     this.handlers.push(handler);
   }
 
+  isStarted = false;
   start() {
+    if (this.isStarted) {
+      return;
+    }
+    this.isStarted = true;
     this.handlers.forEach((handler) => handler());
   }
 }

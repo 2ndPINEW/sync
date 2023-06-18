@@ -1,5 +1,5 @@
 import { BrowserSync } from "./core/browse-sync";
-import { ProxyServer } from "./core/proxy-server";
+import { BrowserTester } from "./core/browser-tester";
 
 const browserSync = new BrowserSync();
-const proxyServer = new ProxyServer();
+const browserTester = new BrowserTester();

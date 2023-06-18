@@ -1,4 +1,4 @@
-import { LOG_PREFIX } from "./constants";
+import { LOG_PREFIX } from "../constants";
 
 export const logInfo = (message: string, ...args: any) => {
   console.info(`${LOG_PREFIX}${message}`, ...args);

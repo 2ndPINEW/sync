@@ -1,5 +1,6 @@
-import { logInfo } from "./logger";
-import { onError$ } from "./error-handler";
+import { logInfo } from "./utils/logger";
+import { onError$ } from "./services/error-handler";
+import "./services/websocket";
 
 logInfo("INFO", "Initializing...");
 

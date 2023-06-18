@@ -1,21 +1,21 @@
 import fastify, { FastifyInstance } from "fastify";
 import fastifyStatic from "@fastify/static";
 import fastifyWebsocket from "@fastify/websocket";
-import config from "../config";
+import config from "../../config";
 import fetch from "node-fetch";
 import path from "path";
 import {
   browserSyncScriptTemplate,
   browserTesterScriptTemplate,
-} from "./templates/index";
+} from "../templates/index";
 import { Subject } from "rxjs";
-import { WsClientChunk, WsServerChunk } from "./shared/schema/ws";
-import paths from "./shared/constants/paths";
-import ports from "./shared/constants/ports";
+import { WsClientChunk, WsServerChunk } from "../shared/schema/ws";
+import paths from "../shared/constants/paths";
+import ports from "../shared/constants/ports";
 import {
   serverChunkToString,
   stringToClientChunk,
-} from "./shared/utils/ws-chunk";
+} from "../shared/utils/ws-chunk";
 
 export class ProxyServer {
   private _server: FastifyInstance;
@@ -30,7 +30,7 @@ export class ProxyServer {
 
     // Client Script を配信する
     this._server.register(fastifyStatic, {
-      root: path.join(__dirname, "../../dist/browser-tester-client"),
+      root: path.join(__dirname, "../../../dist/browser-tester-client"),
       prefix: paths.clientScript.root,
     });
 

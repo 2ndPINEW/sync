@@ -2,19 +2,41 @@ export type WsServerChunk = WsServerChunkProps & ChunkSharedProps;
 
 export type WsClientChunk = WsClientChunkProps & ChunkSharedProps;
 
-type WsServerChunkProps = {};
+type WsServerChunkProps =
+  | {
+      type: "ping";
+    }
+  | {
+      type: "request-page-open";
+      path: string;
+    };
 
 type WsClientChunkProps =
+  // ページを開いた時に送る(接続イベントも含める)
   | {
-      kind: "connect";
+      type: "open";
+      path: string;
+      platformInfo: PlatformInfo;
     }
   | {
-      kind: "message";
+      type: "pong";
     }
+  // 切断
   | {
-      kind: "disconnect";
+      type: "disconnect";
     };
 
 type ChunkSharedProps = {
-  clientId: string;
+  clientId: string | "*";
+};
+
+export type PlatformInfo = {
+  os: string;
+  browser: string;
+  version: string;
+  screen: {
+    width: number;
+    height: number;
+  };
+  language: string;
 };

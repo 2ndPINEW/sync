@@ -145,7 +145,7 @@ export class ClientService {
           path: targetPath.path,
         });
       } else {
-        console.log("all paths are checked");
+        logInfo("all paths are checked");
       }
     });
   }

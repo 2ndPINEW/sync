@@ -10,4 +10,8 @@ export default {
   proxy: {
     port: 4636,
   },
+  // API用のポート
+  managementApi: {
+    port: 4637,
+  },
 };

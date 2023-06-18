@@ -1,22 +1,22 @@
-import { timer } from "rxjs";
+import { BehaviorSubject, timer } from "rxjs";
 import {
   PlatformInfo,
   WsClientChunk,
   WsServerChunk,
 } from "../../shared/schema/ws";
 import { ProxyServer } from "./proxy-server";
-import { logInfo } from "../utils/logger";
 
-interface Client {
+export interface Client {
   id: string;
   platformInfo: PlatformInfo;
   lastActiveAt: number;
+  idleLogs: Extract<WsClientChunk, { type: "idle" }>[];
 }
 
 export class ClientService {
   private _server: ProxyServer;
 
-  private _clients: Client[] = [];
+  private _clients$: BehaviorSubject<Client[]> = new BehaviorSubject([] as any);
 
   constructor() {
     this._server = new ProxyServer();
@@ -40,30 +40,56 @@ export class ClientService {
       this.updateLastActiveAt(chunk.clientId);
     }
     if (chunk.type === "load") {
-      this._clients.push({
-        id: chunk.clientId,
-        platformInfo: chunk.platformInfo,
-        lastActiveAt: Date.now(),
-      });
+      this._clients$.next(
+        this._clients$.value.concat({
+          id: chunk.clientId,
+          platformInfo: chunk.platformInfo,
+          lastActiveAt: Date.now(),
+          idleLogs: [],
+        })
+      );
+    }
+    if (chunk.type === "idle") {
+      this._clients$.next(
+        this._clients$.value.map((client) => {
+          if (client.id === chunk.clientId) {
+            return {
+              ...client,
+              idleLogs: client.idleLogs.concat(chunk),
+            };
+          }
+          return client;
+        })
+      );
     }
   }
 
   private updateLastActiveAt(clientId: string) {
-    const client = this._clients.find((client) => client.id === clientId);
-    if (client) {
-      client.lastActiveAt = Date.now();
-    }
+    this._clients$.next(
+      this._clients$.value.map((client) => {
+        if (client.id === clientId) {
+          return {
+            ...client,
+            lastActiveAt: Date.now(),
+          };
+        }
+        return client;
+      })
+    );
   }
 
   private dropInactiveClients() {
     const now = Date.now();
-    this._clients = this._clients.filter(
-      (client) => now - client.lastActiveAt < 8000
+    this._clients$.next(
+      this._clients$.value.filter((client) => now - client.lastActiveAt < 8000)
     );
-    logInfo("Clients", this._clients);
   }
 
   send(chunk: WsServerChunk) {
     this._server.wsSend(chunk);
+  }
+
+  get clients$() {
+    return this._clients$;
   }
 }

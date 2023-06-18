@@ -24,6 +24,7 @@ try {
     async () => {
       ws.send({
         type: "idle",
+        id: Math.random().toString(32).slice(2),
         clientId,
         path: window.location.pathname,
         html: document.documentElement.outerHTML,
